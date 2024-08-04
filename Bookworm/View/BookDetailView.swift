@@ -9,7 +9,9 @@ import SwiftData
 import SwiftUI
 
 struct BookDetailView: View {
-//    @Environment(\.modelContext) var modelContext
+    @Environment(\.modelContext) var modelContext
+    @Environment(\.dismiss) var dismiss
+    @State private var showingDeleteAlert = false
     
     let book: Book
     
@@ -39,10 +41,35 @@ struct BookDetailView: View {
             
             RatingView(rating: .constant(book.rating))
                 .font(.largeTitle)
+            
+            Button {
+                showingDeleteAlert.toggle()
+            } label: {
+                HStack(spacing: 13) {
+                    Image(systemName: "trash")
+                    Text("Delete Book")
+                }
+            }
+            .padding()
+            .background(.thinMaterial)
+            .clipShape(.rect(cornerRadius: 25))
+            .foregroundStyle(.primary)
+            .shadow(color: .black.opacity(0.2), radius: 10)
+            .padding(80)
+            
         }
         .navigationTitle(book.title)
         .navigationBarTitleDisplayMode(.inline)
         .scrollBounceBehavior(.basedOnSize)
+        .alert("Delete Book", isPresented: $showingDeleteAlert) {
+            Button("Delete", role: .destructive) {
+                modelContext.delete(book)
+                dismiss()
+            }
+            Button("Cancel", role: .cancel) {
+                showingDeleteAlert.toggle()
+            }
+        }
     }
 }
 
