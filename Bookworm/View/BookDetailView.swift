@@ -42,6 +42,11 @@ struct BookDetailView: View {
             RatingView(rating: .constant(book.rating))
                 .font(.largeTitle)
             
+            Text(book.date.formatted(date: .long, time: .omitted))
+                .padding()
+                .font(.title3)
+                .fontWeight(.light)
+
             Button {
                 showingDeleteAlert.toggle()
             } label: {
